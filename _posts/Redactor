@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конструктор резюме</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 20px auto;
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .form-section {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .preview-section {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1, h2 {
+            color: #2c3e50;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .resume {
+            padding: 30px;
+            background: white;
+            min-height: 800px;
+        }
+        
+        .resume-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 20px;
+        }
+        
+        .resume-name {
+            font-size: 28px;
+            margin: 0;
+            color: #2c3e50;
+        }
+        
+        .resume-title {
+            font-size: 18px;
+            color: #7f8c8d;
+            margin: 5px 0;
+        }
+        
+        .resume-contact {
+            margin-top: 10px;
+        }
+        
+        .resume-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            color: #3498db;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .experience-item, .education-item {
+            margin-bottom: 15px;
+        }
+        
+        .job-title, .degree {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .company, .university {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .date {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .skill {
+            background: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Конструктор резюме</h1>
+    
+    <div class="container">
+        <div class="form-section">
+            <h2>Заполните данные</h2>
+            
+            <div class="form-group">
+                <label for="fullName">ФИО</label>
+                <input type="text" id="fullName" placeholder="Иванов Иван Иванович">
+            </div>
+            
+            <div class="form-group">
+                <label for="jobTitle">Желаемая должность</label>
+                <input type="text" id="jobTitle" placeholder="Например: Веб-разработчик">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="example@mail.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Телефон</label>
+                <input type="tel" id="phone" placeholder="+7 (999) 123-45-67">
+            </div>
+            
+            <div class="form-group">
+                <label for="address">Адрес</label>
+                <input type="text" id="address" placeholder="Город, страна">
+            </div>
+            
+            <div class="form-group">
+                <label for="summary">О себе</label>
+                <textarea id="summary" placeholder="Краткое описание ваших навыков и опыта"></textarea>
+            </div>
+            
+            <h3>Опыт работы</h3>
+            <div id="experience-container">
+                <div class="experience-form">
+                    <div class="form-group">
+                        <label for="jobTitle1">Должность</label>
+                        <input type="text" id="jobTitle1" placeholder="Например: Веб-разработчик">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="company1">Компания</label>
+                        <input type="text" id="company1" placeholder="Название компании">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="jobDate1">Период работы</label>
+                        <input type="text" id="jobDate1" placeholder="2018 - настоящее время">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="jobDescription1">Обязанности и достижения</label>
+                        <textarea id="jobDescription1" placeholder="Описание ваших обязанностей и достижений"></textarea>
+                    </div>
+                </div>
+            </div>
+            <button id="add-experience">+ Добавить место работы</button>
+            
+            <h3>Образование</h3>
+            <div id="education-container">
+                <div class="education-form">
+                    <div class="form-group">
+                        <label for="degree1">Степень/Специальность</label>
+                        <input type="text" id="degree1" placeholder="Например: Бакалавр компьютерных наук">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="university1">Учебное заведение</label>
+                        <input type="text" id="university1" placeholder="Название университета">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="educationDate1">Годы обучения</label>
+                        <input type="text" id="educationDate1" placeholder="2014 - 2018">
+                    </div>
+                </div>
+            </div>
+            <button id="add-education">+ Добавить образование</button>
+            
+            <h3>Навыки</h3>
+            <div class="form-group">
+                <label for="skills">Перечислите ваши навыки через запятую</label>
+                <input type="text" id="skills" placeholder="HTML, CSS, JavaScript, Photoshop">
+            </div>
+        </div>
+        
+        <div class="preview-section">
+            <h2>Предпросмотр резюме</h2>
+            <div class="actions">
+                <button id="download-pdf">Скачать PDF</button>
+                <button id="print-resume">Печать</button>
+            </div>
+            <div id="resume-preview" class="resume">
+                <div class="resume-header">
+                    <h1 class="resume-name">Иванов Иван Иванович</h1>
+                    <p class="resume-title">Веб-разработчик</p>
+                    <div class="resume-contact">
+                        <p>example@mail.com | +7 (999) 123-45-67 | Город, страна</p>
+                    </div>
+                </div>
+                
+                <div class="resume-section">
+                    <h2 class="section-title">О себе</h2>
+                    <p>Опытный веб-разработчик с 5-летним стажем. Специализируюсь на создании адаптивных и пользовательских интерфейсов.</p>
+                </div>
+                
+                <div class="resume-section">
+                    <h2 class="section-title">Опыт работы</h2>
+                    <div class="experience-item">
+                        <p class="job-title">Веб-разработчик</p>
+                        <p class="company">ООО "ВебСтудия" <span class="date">| 2018 - настоящее время</span></p>
+                        <p>Разработка и поддержка клиентских веб-приложений. Оптимизация производительности. Работа в команде над крупными проектами.</p>
+                    </div>
+                </div>
+                
+                <div class="resume-section">
+                    <h2 class="section-title">Образование</h2>
+                    <div class="education-item">
+                        <p class="degree">Бакалавр компьютерных наук</p>
+                        <p class="university">Национальный Технический Университет <span class="date">| 2014 - 2018</span></p>
+                    </div>
+                </div>
+                
+                <div class="resume-section">
+                    <h2 class="section-title">Навыки</h2>
+                    <div class="skills-list">
+                        <span class="skill">HTML</span>
+                        <span class="skill">CSS</span>
+                        <span class="skill">JavaScript</span>
+                        <span class="skill">React</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Общие переменные
+        let experienceCount = 1;
+        let educationCount = 1;
+        
+        // Инициализация jsPDF
+        const { jsPDF } = window.jspdf;
+        
+        // DOM элементы
+        const fullNameInput = document.getElementById('fullName');
+        const jobTitleInput = document.getElementById('jobTitle');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        const addressInput = document.getElementById('address');
+        const summaryInput = document.getElementById('summary');
+        const skillsInput = document.getElementById('skills');
+        
+        const addExperienceBtn = document.getElementById('add-experience');
+        const addEducationBtn = document.getElementById('add-education');
+        const downloadPdfBtn = document.getElementById('download-pdf');
+        const printResumeBtn = document.getElementById('print-resume');
+        
+        const experienceContainer = document.getElementById('experience-container');
+        const educationContainer = document.getElementById('education-container');
+        const resumePreview = document.getElementById('resume-preview');
+        
+        // Слушатели событий для основных полей
+        [fullNameInput, jobTitleInput, emailInput, phoneInput, addressInput, summaryInput, skillsInput].forEach(input => {
+            input.addEventListener('input', updateResume);
+        });
+        
+        // Добавление места работы
+        addExperienceBtn.addEventListener('click', () => {
+            experienceCount++;
+            
+            const newExperience = document.createElement('div');
+            newExperience.className = 'experience-form';
+            newExperience.innerHTML = `
+                <div class="form-group">
+                    <label for="jobTitle${experienceCount}">Должность</label>
+                    <input type="text" id="jobTitle${experienceCount}" placeholder="Например: Веб-разработчик">
+                </div>
+                
+                <div class="form-group">
+                    <label for="company${experienceCount}">Компания</label>
+                    <input type="text" id="company${experienceCount}" placeholder="Название компании">
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobDate${experienceCount}">Период работы</label>
+                    <input type="text" id="jobDate${experienceCount}" placeholder="2018 - настоящее время">
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobDescription${experienceCount}">Обязанности и достижения</label>
+                    <textarea id="jobDescription${experienceCount}" placeholder="Описание ваших обязанностей и достижений"></textarea>
+                </div>
+            `;
+            
+            experienceContainer.appendChild(newExperience);
+            
+            // Добавляем слушатели для новых полей
+            document.getElementById(`jobTitle${experienceCount}`).addEventListener('input', updateResume);
+            document.getElementById(`company${experienceCount}`).addEventListener('input', updateResume);
+            document.getElementById(`jobDate${experienceCount}`).addEventListener('input', updateResume);
+            document.getElementById(`jobDescription${experienceCount}`).addEventListener('input', updateResume);
+        });
+        
+        // Добавление образования
+        addEducationBtn.addEventListener('click', () => {
+            educationCount++;
+            
+            const newEducation = document.createElement('div');
+            newEducation.className = 'education-form';
+            newEducation.innerHTML = `
+                <div class="form-group">
+                    <label for="degree${educationCount}">Степень/Специальность</label>
+                    <input type="text" id="degree${educationCount}" placeholder="Например: Бакалавр компьютерных наук">
+                </div>
+                
+                <div class="form-group">
+                    <label for="university${educationCount}">Учебное заведение</label>
+                    <input type="text" id="university${educationCount}" placeholder="Название университета">
+                </div>
+                
+                <div class="form-group">
+                    <label for="educationDate${educationCount}">Годы обучения</label>
+                    <input type="text" id="educationDate${educationCount}" placeholder="2014 - 2018">
+                </div>
+            `;
+            
+            educationContainer.appendChild(newEducation);
+            
+            // Добавляем слушатели для новых полей
+            document.getElementById(`degree${educationCount}`).addEventListener('input', updateResume);
+            document.getElementById(`university${educationCount}`).addEventListener('input', updateResume);
+            document.getElementById(`educationDate${educationCount}`).addEventListener('input', updateResume);
+        });
+        
+        // Скачать PDF
+        downloadPdfBtn.addEventListener('click', () => {
+            const element = document.getElementById('resume-preview');
+            
+            html2canvas(element).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save('resume.pdf');
+            });
+        });
+        
+        // Печать
+        printResumeBtn.addEventListener('click', () => {
+            window.print();
+        });
+        
+        // Обновление предпросмотра резюме
+        function updateResume() {
+            // Основная информация
+            document.querySelector('.resume-name').textContent = fullNameInput.value || 'Иванов Иван Иванович';
+            document.querySelector('.resume-title').textContent = jobTitleInput.value || 'Веб-разработчик';
+            
+            // Контакты
+            const contactInfo = [];
+            if (emailInput.value) contactInfo.push(emailInput.value);
+            if (phoneInput.value) contactInfo.push(phoneInput.value);
+            if (addressInput.value) contactInfo.push(addressInput.value);
+            
+            document.querySelector('.resume-contact p').textContent = contactInfo.join(' | ') || 'example@mail.com | +7 (999) 123-45-67 | Город, страна';
+            
+            // О себе
+            document.querySelector('.resume-section:nth-of-type(1) p').textContent = summaryInput.value || 'Опытный веб-разработчик с 5-летним стажем. Специализируюсь на создании адаптивных и пользовательских интерфейсов.';
+            
+            // Опыт работы
+            const experienceSection = document.querySelector('.resume-section:nth-of-type(2)');
+            experienceSection.innerHTML = '<h2 class="section-title">Опыт работы</h2>';
+            
+            for (let i = 1; i <= experienceCount; i++) {
+                const jobTitle = document.getElementById(`jobTitle${i}`)?.value;
+                const company = document.getElementById(`company${i}`)?.value;
+                const jobDate = document.getElementById(`jobDate${i}`)?.value;
+                const jobDescription = document.getElementById(`jobDescription${i}`)?.value;
+                
+                if (jobTitle || company || jobDate || jobDescription) {
+                    const experienceItem = document.createElement('div');
+                    experienceItem.className = 'experience-item';
+                    experienceItem.innerHTML = `
+                        <p class="job-title">${jobTitle || 'Веб-разработчик'}</p>
+                        <p class="company">${company || 'ООО "ВебСтудия"'} <span class="date">| ${jobDate || '2018 - настоящее время'}</span></p>
+                        <p>${jobDescription || 'Разработка и поддержка клиентских веб-приложений. Оптимизация производительности. Работа в команде над крупными проектами.'}</p>
+                    `;
+                    experienceSection.appendChild(experienceItem);
+                }
+            }
+            
+            // Образование
+            const educationSection = document.querySelector('.resume-section:nth-of-type(3)');
+            educationSection.innerHTML = '<h2 class="section-title">Образование</h2>';
+            
+            for (let i = 1; i <= educationCount; i++) {
+                const degree = document.getElementById(`degree${i}`)?.value;
+                const university = document.getElementById(`university${i}`)?.value;
+                const educationDate = document.getElementById(`educationDate${i}`)?.value;
+                
+                if (degree || university || educationDate) {
+                    const educationItem = document.createElement('div');
+                    educationItem.className = 'education-item';
+                    educationItem.innerHTML = `
+                        <p class="degree">${degree || 'Бакалавр компьютерных наук'}</p>
+                        <p class="university">${university || 'Национальный Технический Университет'} <span class="date">| ${educationDate || '2014 - 2018'}</span></p>
+                    `;
+                    educationSection.appendChild(educationItem);
+                }
+            }
+            
+            // Навыки
+            const skillsSection = document.querySelector('.resume-section:nth-of-type(4)');
+            skillsSection.innerHTML = '<h2 class="section-title">Навыки</h2><div class="skills-list"></div>';
+            
+            const skillsList = skillsSection.querySelector('.skills-list');
+            const skills = skillsInput.value.split(',').map(skill => skill.trim()).filter(skill => skill);
+            
+            if (skills.length > 0) {
+                skills.forEach(skill => {
+                    const skillElement = document.createElement('span');
+                    skillElement.className = 'skill';
+                    skillElement.textContent = skill;
+                    skillsList.appendChild(skillElement);
+                });
+            } else {
+                ['HTML', 'CSS', 'JavaScript', 'React'].forEach(skill => {
+                    const skillElement = document.createElement('span');
+                    skillElement.className = 'skill';
+                    skillElement.textContent = skill;
+                    skillsList.appendChild(skillElement);
+                });
+            }
+        }
+        
+        // Инициализация
+        updateResume();
+    </script>
+</body>
+</html>
